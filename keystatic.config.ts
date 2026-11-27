@@ -290,6 +290,8 @@ export default config({
         werkwijzeTitle: fields.text({ label: "Werkwijze: kop boven de casussen" }),
         mediaTitle: fields.text({ label: "Video's: kop" }),
         mediaIntro: fields.text({ label: "Video's: inleiding", multiline: true }),
+        overMijMediaTitle: fields.text({ label: "Video's: kop op de pagina Over mij" }),
+        werkwijzeMediaTitle: fields.text({ label: "Video's: kop op de pagina Werkwijze" }),
         videoNotice: fields.text({
           label: "Video's: melding bij de afspeelknop",
           description:
@@ -442,6 +444,12 @@ export default config({
         }),
         showOnOverMij: fields.checkbox({
           label: "Ook tonen op de pagina Over mij",
+          description: "Zonder aangevinkte video's heeft die pagina geen videoblok.",
+          defaultValue: false,
+        }),
+        showOnWerkwijze: fields.checkbox({
+          label: "Ook tonen op de pagina Werkwijze",
+          description: "Zonder aangevinkte video's heeft die pagina geen videoblok.",
           defaultValue: false,
         }),
         order: fields.integer({ label: "Volgorde", defaultValue: 10 }),

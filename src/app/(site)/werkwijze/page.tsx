@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { CaseCard } from "@/components/case-card";
+import { MediaSection } from "@/components/media-block";
 import { Steps } from "@/components/steps";
 import { CtaBand, PageHeader, Prose, Section, SectionTitle } from "@/components/ui";
 import {
   getCases,
+  getMedia,
   getPraktijk,
   getSettings,
   getWerkwijze,
@@ -22,6 +24,7 @@ export default function WerkwijzePage() {
   const cases = getCases()
     .filter((item) => item.showOnWerkwijze)
     .slice(0, 2);
+  const media = getMedia().filter((item) => item.showOnWerkwijze);
 
   return (
     <>
@@ -42,6 +45,12 @@ export default function WerkwijzePage() {
           </div>
         </Section>
       )}
+
+      <MediaSection
+        title={praktijk.werkwijzeMediaTitle}
+        items={media}
+        labels={praktijk}
+      />
 
       <Section tone="sage">
         <SectionTitle>{page.practicalTitle}</SectionTitle>

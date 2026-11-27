@@ -145,6 +145,8 @@ export type Praktijk = {
   werkwijzeTitle: string;
   mediaTitle: string;
   mediaIntro: string;
+  overMijMediaTitle: string;
+  werkwijzeMediaTitle: string;
   videoNotice: string;
   videoButton: string;
   keyPointsTitle: string;
@@ -188,6 +190,7 @@ export type MediaItem = {
   summary: string;
   keyPoints: string[];
   showOnOverMij: boolean;
+  showOnWerkwijze: boolean;
   order: number;
 };
 

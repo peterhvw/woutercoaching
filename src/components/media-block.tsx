@@ -1,7 +1,7 @@
 import type { MediaItem, Praktijk } from "@/lib/content";
 import { toParagraphs } from "@/lib/content";
 import { toEmbedUrl } from "@/lib/video";
-import { PlaceholderTag, Prose } from "./ui";
+import { PlaceholderTag, Prose, Section, SectionTitle } from "./ui";
 import { VideoPlayer } from "./video-player";
 
 /** One talk or video: player, context, summary and key points. */
@@ -52,5 +52,33 @@ export function MediaBlock({ item, labels }: { item: MediaItem; labels: Praktijk
         )}
       </div>
     </article>
+  );
+}
+
+/**
+ * Optional video section for a page. Renders nothing when no video is
+ * selected for that page, so the page simply has no video block.
+ */
+export function MediaSection({
+  title,
+  items,
+  labels,
+  tone = "paper",
+}: {
+  title: string;
+  items: MediaItem[];
+  labels: Praktijk;
+  tone?: "paper" | "surface" | "sand" | "sage";
+}) {
+  if (items.length === 0) return null;
+  return (
+    <Section tone={tone}>
+      <SectionTitle>{title}</SectionTitle>
+      <div className="space-y-14">
+        {items.map((item) => (
+          <MediaBlock key={item.slug} item={item} labels={labels} />
+        ))}
+      </div>
+    </Section>
   );
 }

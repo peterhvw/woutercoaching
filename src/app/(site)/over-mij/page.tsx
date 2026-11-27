@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MediaBlock } from "@/components/media-block";
+import { MediaSection } from "@/components/media-block";
 import {
   CtaBand,
   PageHeader,
@@ -57,16 +57,11 @@ export default function OverMijPage() {
         </ul>
       </Section>
 
-      {media.length > 0 && (
-        <Section tone="paper">
-          <SectionTitle>{praktijk.mediaTitle}</SectionTitle>
-          <div className="space-y-14">
-            {media.map((item) => (
-              <MediaBlock key={item.slug} item={item} labels={praktijk} />
-            ))}
-          </div>
-        </Section>
-      )}
+      <MediaSection
+        title={praktijk.overMijMediaTitle}
+        items={media}
+        labels={praktijk}
+      />
 
       <CtaBand />
     </>
