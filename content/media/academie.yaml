@@ -1,5 +1,8 @@
 title: Academie
-keyPoints: []
+videoFile: /video/media/academie/videoFile.mp4
+summary: Senna droomt
+keyPoints:
+  - Senna slaapt
 showOnOverMij: false
 showOnWerkwijze: false
 order: 10
