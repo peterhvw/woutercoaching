@@ -7,14 +7,14 @@ import {
   Section,
   SectionTitle,
 } from "@/components/ui";
-import { getHome, getOverMij, getSettings, toParagraphs } from "@/lib/content";
+import { getOverMij, toParagraphs } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Over mij" };
+export function generateMetadata(): Metadata {
+  return { title: getOverMij().title };
+}
 
 export default function OverMijPage() {
   const page = getOverMij();
-  const home = getHome();
-  const settings = getSettings();
 
   return (
     <>
@@ -49,11 +49,7 @@ export default function OverMijPage() {
         </ul>
       </Section>
 
-      <CtaBand
-        title={home.ctaTitle}
-        text={home.ctaText}
-        reassurance={`Gratis en vrijblijvend · ${settings.introCallMinutes} minuten`}
-      />
+      <CtaBand />
     </>
   );
 }

@@ -18,15 +18,19 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-export function EnquiryForm({
-  successTitle,
-  successText,
-  replyTime,
-}: {
+export type EnquiryLabels = {
+  name: string;
+  email: string;
+  phone: string;
+  optional: string;
+  message: string;
+  submit: string;
+  privacyNote: string;
   successTitle: string;
   successText: string;
-  replyTime: string;
-}) {
+};
+
+export function EnquiryForm({ labels }: { labels: EnquiryLabels }) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
 
   if (state.status === "success") {
@@ -35,9 +39,8 @@ export function EnquiryForm({
         role="status"
         className="h-fit rounded-2xl border border-sage-600 bg-sage-50 p-8"
       >
-        <h2 className="text-2xl">{successTitle}</h2>
-        <p className="mt-3 text-lg leading-relaxed">{successText}</p>
-        <p className="mt-2 text-muted">Je krijgt {replyTime} een reactie.</p>
+        <h2 className="text-2xl">{labels.successTitle}</h2>
+        <p className="mt-3 text-lg leading-relaxed">{labels.successText}</p>
       </div>
     );
   }
@@ -54,7 +57,7 @@ export function EnquiryForm({
 
       <div>
         <label htmlFor="name" className="font-semibold">
-          Naam
+          {labels.name}
         </label>
         <input
           id="name"
@@ -72,7 +75,7 @@ export function EnquiryForm({
 
       <div>
         <label htmlFor="email" className="font-semibold">
-          E-mailadres
+          {labels.email}
         </label>
         <input
           id="email"
@@ -90,7 +93,8 @@ export function EnquiryForm({
 
       <div>
         <label htmlFor="phone" className="font-semibold">
-          Telefoonnummer <span className="font-normal text-muted">(optioneel)</span>
+          {labels.phone}{" "}
+          <span className="font-normal text-muted">({labels.optional})</span>
         </label>
         <input
           id="phone"
@@ -104,7 +108,7 @@ export function EnquiryForm({
 
       <div>
         <label htmlFor="message" className="font-semibold">
-          Waar loop je tegenaan?
+          {labels.message}
         </label>
         <textarea
           id="message"
@@ -130,11 +134,11 @@ export function EnquiryForm({
         disabled={pending}
         className="inline-flex min-h-12 items-center justify-center rounded-full bg-sage-700 px-7 py-3 text-base font-semibold text-white transition-colors hover:bg-sage-800 disabled:opacity-60"
       >
-        {pending ? "Bezig met versturen…" : "Verstuur aanvraag"}
+        {pending ? "Bezig met versturen…" : labels.submit}
       </button>
 
       <p className="text-sm text-muted">
-        Je gegevens worden alleen gebruikt om contact met je op te nemen. Lees de{" "}
+        {labels.privacyNote}{" "}
         <Link href="/privacyverklaring" className="underline underline-offset-4">
           privacyverklaring
         </Link>

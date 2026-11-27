@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import { Steps } from "@/components/steps";
 import { CtaBand, PageHeader, Prose, Section, SectionTitle } from "@/components/ui";
 import {
-  getHome,
   getSettings,
   getWerkwijze,
   priceLabel,
   toParagraphs,
 } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Werkwijze en tarieven" };
+export function generateMetadata(): Metadata {
+  return { title: getWerkwijze().title };
+}
 
 export default function WerkwijzePage() {
   const page = getWerkwijze();
-  const home = getHome();
   const settings = getSettings();
 
   return (
@@ -21,7 +21,7 @@ export default function WerkwijzePage() {
       <PageHeader title={page.title} intro={page.intro} />
 
       <Section tone="paper">
-        <SectionTitle>De stappen</SectionTitle>
+        <SectionTitle>{page.stepsTitle}</SectionTitle>
         <Steps steps={page.steps} />
       </Section>
 
@@ -42,7 +42,7 @@ export default function WerkwijzePage() {
       <Section tone="surface" id="tarieven">
         <SectionTitle>{page.priceTitle}</SectionTitle>
         <p className="mb-6 font-serif text-3xl text-sage-800">
-          Traject {priceLabel(settings)}
+          {page.priceLead} {priceLabel(settings)}
         </p>
         <Prose paragraphs={toParagraphs(page.priceText)} />
       </Section>
@@ -52,11 +52,7 @@ export default function WerkwijzePage() {
         <Prose paragraphs={toParagraphs(page.boundaryText)} />
       </Section>
 
-      <CtaBand
-        title={home.ctaTitle}
-        text={home.ctaText}
-        reassurance={`Gratis en vrijblijvend · ${settings.introCallMinutes} minuten`}
-      />
+      <CtaBand />
     </>
   );
 }

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { getHome, getSettings, reassuranceLine } from "@/lib/content";
 
 /** Shared building blocks. Pages compose these; they do not style from scratch. */
 
 export const INTRO_HREF = "/kennismaking";
-export const INTRO_LABEL = "Plan een gratis kennismaking";
 
 export function Container({
   children,
@@ -120,33 +120,28 @@ export function PortraitPlaceholder({ label = "Portretfoto volgt" }: { label?: s
   );
 }
 
-export function CtaBand({
-  title,
-  text,
-  reassurance,
-}: {
-  title: string;
-  text: string;
-  reassurance: string;
-}) {
+/** Closing call to action, shown at the bottom of most pages. Text comes from the editor. */
+export function CtaBand() {
+  const home = getHome();
+  const settings = getSettings();
   return (
     <section className="bg-sage-800 py-16 text-white sm:py-20">
       <Container className="text-center">
         <h2 className="mx-auto max-w-2xl text-3xl leading-tight !text-white sm:text-4xl">
-          {title}
+          {home.ctaTitle}
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-sage-100">
-          {text}
+          {home.ctaText}
         </p>
         <div className="mt-8">
           <Link
             href={INTRO_HREF}
             className="inline-flex min-h-12 items-center justify-center rounded-full bg-surface px-7 py-3 text-base font-semibold text-sage-800 transition-colors hover:bg-sand"
           >
-            {INTRO_LABEL}
+            {settings.ctaLabel}
           </Link>
         </div>
-        <p className="mt-4 text-sm text-sage-100">{reassurance}</p>
+        <p className="mt-4 text-sm text-sage-100">{reassuranceLine(settings)}</p>
       </Container>
     </section>
   );

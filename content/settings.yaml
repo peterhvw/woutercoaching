@@ -7,10 +7,13 @@ description: >-
 city: Nijmegen
 address: ''
 email: ''
-phone: ''
 whatsapp: ''
 kvk: ''
 btw: ''
 priceFrom: ''
 introCallMinutes: 30
 replyTime: binnen 1 werkdag
+ctaLabel: Plan een gratis kennismaking
+ctaLabelShort: Kennismaking
+reassurance: Gratis en vrijblijvend
+whatsappLabel: Stuur een WhatsApp-bericht

@@ -2,6 +2,7 @@ title: Werkwijze
 intro: >-
   Een traject bestaat uit vier stappen. Je weet vooraf wat je kunt verwachten en
   je beslist na elke stap zelf of je verdergaat.
+stepsTitle: De stappen
 steps:
   - title: Gratis kennismaking
     text: >-
@@ -31,6 +32,7 @@ practical:
   - title: Aantal sessies
     text: '[Aan te vullen, bijvoorbeeld gemiddeld 5 tot 7 sessies]'
 priceTitle: Tarieven
+priceLead: Traject
 priceText: |-
   De kennismaking is gratis. Na de intake krijg je een voorstel met het aantal sessies en de totale kosten, zodat je vooraf weet waar je aan toe bent.
 

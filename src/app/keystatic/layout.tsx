@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { usesGithubStorage } from "../../../keystatic.config";
 import KeystaticApp from "./keystatic";
 
 export const metadata: Metadata = {
@@ -8,12 +9,12 @@ export const metadata: Metadata = {
 };
 
 /**
- * The content editor. It writes straight to the files in /content, so it is
- * only available on a developer machine. Before editors use it on the live
- * site, switch keystatic.config.ts to GitHub or Keystatic Cloud storage.
+ * The content editor. With local storage it writes straight to the files in
+ * /content without any login, so it is blocked on a deployed site. With
+ * GitHub storage, editors sign in with GitHub and it is available everywhere.
  */
 export default function KeystaticLayout() {
-  if (process.env.NODE_ENV === "production") notFound();
+  if (process.env.NODE_ENV === "production" && !usesGithubStorage) notFound();
   return (
     <html lang="nl">
       <body>

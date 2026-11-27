@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Settings } from "@/lib/content";
+import { whatsappHref, type Settings } from "@/lib/content";
 import { NAV_ITEMS } from "./site-header";
 import { Container, INTRO_HREF } from "./ui";
 
@@ -9,6 +9,7 @@ function valueOr(value: string | undefined, placeholder: string) {
 }
 
 export function SiteFooter({ settings }: { settings: Settings }) {
+  const whatsapp = whatsappHref(settings);
   return (
     <footer className="border-t border-line bg-sand py-12 text-[0.95rem] text-ink">
       <Container className="grid gap-10 sm:grid-cols-3">
@@ -22,7 +23,7 @@ export function SiteFooter({ settings }: { settings: Settings }) {
 
         <nav aria-label="Voettekstmenu">
           <ul className="space-y-2">
-            {[...NAV_ITEMS, { href: INTRO_HREF, label: "Gratis kennismaking" }].map(
+            {[...NAV_ITEMS, { href: INTRO_HREF, label: settings.ctaLabelShort }].map(
               (item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="hover:underline">
@@ -37,7 +38,15 @@ export function SiteFooter({ settings }: { settings: Settings }) {
         <div>
           <ul className="space-y-2">
             <li>E-mail: {valueOr(settings.email, "e-mailadres volgt")}</li>
-            <li>Telefoon: {valueOr(settings.phone, "telefoonnummer volgt")}</li>
+            <li>
+              {whatsapp ? (
+                <a href={whatsapp} className="hover:underline">
+                  {settings.whatsappLabel}
+                </a>
+              ) : (
+                "WhatsApp: [nummer volgt]"
+              )}
+            </li>
             <li>KvK: {valueOr(settings.kvk, "KvK-nummer volgt")}</li>
             <li>Btw-id: {valueOr(settings.btw, "btw-id volgt")}</li>
             <li>

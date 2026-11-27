@@ -20,19 +20,23 @@ export type Settings = {
   city: string;
   address: string;
   email: string;
-  phone: string;
   whatsapp: string;
   kvk: string;
   btw: string;
   priceFrom: string;
   introCallMinutes: number;
   replyTime: string;
+  ctaLabel: string;
+  ctaLabelShort: string;
+  reassurance: string;
+  whatsappLabel: string;
 };
 
 export type Home = {
   heroTitle: string;
   heroIntro: string;
   heroNote: string;
+  heroSecondaryButton: string;
   recogniseTitle: string;
   recogniseItems: string[];
   recogniseClosing: string;
@@ -40,8 +44,14 @@ export type Home = {
   outcomes: TitledItem[];
   approachTitle: string;
   approachText: string;
+  stepsTitle: string;
+  stepsPriceIntro: string;
+  stepsLink: string;
+  reviewsTitle: string;
+  reviewsLink: string;
   aboutTitle: string;
   aboutText: string;
+  aboutLink: string;
   faqTitle: string;
   faq: { question: string; answer: string }[];
   ctaTitle: string;
@@ -61,10 +71,12 @@ export type OverMij = {
 export type Werkwijze = {
   title: string;
   intro: string;
+  stepsTitle: string;
   steps: TitledItem[];
   practicalTitle: string;
   practical: TitledItem[];
   priceTitle: string;
+  priceLead: string;
   priceText: string;
   boundaryTitle: string;
   boundaryText: string;
@@ -75,8 +87,35 @@ export type Kennismaking = {
   intro: string;
   expectTitle: string;
   expectItems: string[];
+  nameLabel: string;
+  emailLabel: string;
+  phoneLabel: string;
+  optionalLabel: string;
+  messageLabel: string;
+  submitLabel: string;
+  privacyNote: string;
+  whatsappIntro: string;
   successTitle: string;
   successText: string;
+};
+
+export type Ervaringen = { title: string; intro: string };
+
+export type Contact = {
+  title: string;
+  intro: string;
+  emailLabel: string;
+  whatsappLabel: string;
+  locationLabel: string;
+  asideTitle: string;
+  asideText: string;
+};
+
+export type Privacy = {
+  title: string;
+  intro: string;
+  draft: boolean;
+  sections: TitledItem[];
 };
 
 export type Review = {
@@ -98,6 +137,9 @@ export const getHome = () => readYaml<Home>("home.yaml");
 export const getOverMij = () => readYaml<OverMij>("over-mij.yaml");
 export const getWerkwijze = () => readYaml<Werkwijze>("werkwijze.yaml");
 export const getKennismaking = () => readYaml<Kennismaking>("kennismaking.yaml");
+export const getErvaringen = () => readYaml<Ervaringen>("ervaringen.yaml");
+export const getContact = () => readYaml<Contact>("contact.yaml");
+export const getPrivacy = () => readYaml<Privacy>("privacy.yaml");
 
 export function getReviews(): Review[] {
   const dir = path.join(CONTENT_DIR, "reviews");
@@ -121,4 +163,21 @@ export function toParagraphs(text: string | undefined): string[] {
 /** "vanaf € 475", or a visible placeholder while no price is set. */
 export function priceLabel(settings: Settings): string {
   return `vanaf € ${settings.priceFrom?.trim() || "[bedrag]"}`;
+}
+
+/** "Gratis en vrijblijvend · 30 minuten · reactie binnen 1 werkdag" */
+export function reassuranceLine(settings: Settings): string {
+  return [
+    settings.reassurance,
+    `${settings.introCallMinutes} minuten`,
+    `reactie ${settings.replyTime}`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+/** WhatsApp chat link, or null while no number is set. Never a phone link. */
+export function whatsappHref(settings: Settings): string | null {
+  const digits = (settings.whatsapp ?? "").replace(/\D/g, "");
+  return digits ? `https://wa.me/${digits}` : null;
 }

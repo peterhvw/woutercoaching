@@ -6,7 +6,6 @@ import {
   Container,
   CtaBand,
   INTRO_HREF,
-  INTRO_LABEL,
   PortraitPlaceholder,
   Prose,
   Section,
@@ -18,6 +17,7 @@ import {
   getSettings,
   getWerkwijze,
   priceLabel,
+  reassuranceLine,
   toParagraphs,
 } from "@/lib/content";
 
@@ -29,7 +29,7 @@ export default function HomePage() {
   const settings = getSettings();
   const werkwijze = getWerkwijze();
   const reviews = getReviews().slice(0, 3);
-  const reassurance = `Gratis en vrijblijvend · ${settings.introCallMinutes} minuten · reactie ${settings.replyTime}`;
+  const reassurance = reassuranceLine(settings);
 
   return (
     <>
@@ -45,9 +45,9 @@ export default function HomePage() {
               {home.heroIntro}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <ButtonLink href={INTRO_HREF}>{INTRO_LABEL}</ButtonLink>
+              <ButtonLink href={INTRO_HREF}>{settings.ctaLabel}</ButtonLink>
               <ButtonLink href="/werkwijze" variant="secondary">
-                Bekijk mijn werkwijze
+                {home.heroSecondaryButton}
               </ButtonLink>
             </div>
             <p className="mt-4 text-sm text-muted">{reassurance}</p>
@@ -99,19 +99,19 @@ export default function HomePage() {
 
       {/* 4. Werkwijze in stappen */}
       <Section tone="paper">
-        <SectionTitle>Zo werkt het</SectionTitle>
+        <SectionTitle>{home.stepsTitle}</SectionTitle>
         <Steps steps={werkwijze.steps} />
         <p className="mt-8 text-lg">
-          Een traject is er <strong>{priceLabel(settings)}</strong>.{" "}
+          {home.stepsPriceIntro} <strong>{priceLabel(settings)}</strong>.{" "}
           <Link href="/werkwijze" className={textLink}>
-            Lees meer over werkwijze en tarieven
+            {home.stepsLink}
           </Link>
         </p>
       </Section>
 
       {/* 5. Ervaringen */}
       <Section tone="sand">
-        <SectionTitle>Ervaringen van cliënten</SectionTitle>
+        <SectionTitle>{home.reviewsTitle}</SectionTitle>
         <div className="grid gap-6 md:grid-cols-3">
           {reviews.map((review) => (
             <ReviewCard key={review.slug} review={review} />
@@ -119,7 +119,7 @@ export default function HomePage() {
         </div>
         <p className="mt-8">
           <Link href="/ervaringen" className={textLink}>
-            Lees alle ervaringen
+            {home.reviewsLink}
           </Link>
         </p>
       </Section>
@@ -135,7 +135,7 @@ export default function HomePage() {
             <Prose paragraphs={toParagraphs(home.aboutText)} />
             <p className="mt-6">
               <Link href="/over-mij" className={textLink}>
-                Meer over mij
+                {home.aboutLink}
               </Link>
             </p>
           </div>
@@ -164,7 +164,7 @@ export default function HomePage() {
       </Section>
 
       {/* 8. Afsluitende oproep */}
-      <CtaBand title={home.ctaTitle} text={home.ctaText} reassurance={reassurance} />
+      <CtaBand />
     </>
   );
 }

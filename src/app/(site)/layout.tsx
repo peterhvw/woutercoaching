@@ -27,7 +27,11 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       className={`${heading.variable} ${body.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans text-[1.0625rem]">
-        <SiteHeader siteName={settings.siteName} />
+        <SiteHeader
+          siteName={settings.siteName}
+          ctaLabel={settings.ctaLabel}
+          ctaLabelShort={settings.ctaLabelShort}
+        />
         <main id="inhoud" className="flex-1">
           {children}
         </main>

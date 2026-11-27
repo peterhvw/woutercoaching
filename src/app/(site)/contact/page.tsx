@@ -1,91 +1,69 @@
 import type { Metadata } from "next";
-import { ButtonLink, INTRO_HREF, INTRO_LABEL, PageHeader, Section } from "@/components/ui";
-import { getSettings } from "@/lib/content";
+import type { ReactNode } from "react";
+import { ButtonLink, INTRO_HREF, PageHeader, Section } from "@/components/ui";
+import { getContact, getSettings, whatsappHref } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Contact" };
+export function generateMetadata(): Metadata {
+  return { title: getContact().title };
+}
 
-function Detail({
-  label,
-  value,
-  href,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  href?: string;
-  placeholder: string;
-}) {
-  const filled = Boolean(value?.trim());
+function Detail({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="border-b border-line py-4">
       <dt className="text-sm font-semibold uppercase tracking-wide text-muted">
         {label}
       </dt>
-      <dd className="mt-1 text-lg">
-        {filled && href ? (
-          <a href={href} className="text-sage-700 underline underline-offset-4">
-            {value}
-          </a>
-        ) : filled ? (
-          value
-        ) : (
-          `[${placeholder}]`
-        )}
-      </dd>
+      <dd className="mt-1 text-lg">{children}</dd>
     </div>
   );
 }
 
+const linkClass = "text-sage-700 underline underline-offset-4";
+
+/** Contact is by email or WhatsApp. There is deliberately no phone number to call. */
 export default function ContactPage() {
+  const page = getContact();
   const settings = getSettings();
+  const whatsapp = whatsappHref(settings);
+  const email = settings.email?.trim();
 
   return (
     <>
-      <PageHeader
-        title="Contact"
-        intro={`Heb je een vraag of wil je kennismaken? Je krijgt ${settings.replyTime} een reactie.`}
-      />
+      <PageHeader title={page.title} intro={page.intro} />
 
       <Section tone="paper">
         <div className="grid gap-12 md:grid-cols-2">
           <dl>
-            <Detail
-              label="E-mail"
-              value={settings.email}
-              href={`mailto:${settings.email}`}
-              placeholder="e-mailadres volgt"
-            />
-            <Detail
-              label="Telefoon"
-              value={settings.phone}
-              href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}
-              placeholder="telefoonnummer volgt"
-            />
-            <Detail
-              label="WhatsApp"
-              value={settings.whatsapp ? "Stuur een WhatsApp-bericht" : ""}
-              href={`https://wa.me/${settings.whatsapp}`}
-              placeholder="WhatsApp-nummer volgt"
-            />
-            <Detail
-              label="Locatie"
-              value={
-                settings.address
-                  ? `${settings.address}, ${settings.city}`
-                  : `${settings.city} en online`
-              }
-              placeholder="adres volgt"
-            />
+            <Detail label={page.emailLabel}>
+              {email ? (
+                <a href={`mailto:${email}`} className={linkClass}>
+                  {email}
+                </a>
+              ) : (
+                "[e-mailadres volgt]"
+              )}
+            </Detail>
+            <Detail label={page.whatsappLabel}>
+              {whatsapp ? (
+                <a href={whatsapp} className={linkClass}>
+                  {settings.whatsappLabel}
+                </a>
+              ) : (
+                "[WhatsApp-nummer volgt]"
+              )}
+            </Detail>
+            <Detail label={page.locationLabel}>
+              {settings.address
+                ? `${settings.address}, ${settings.city}`
+                : `${settings.city} en online`}
+            </Detail>
           </dl>
 
           <div className="h-fit rounded-2xl bg-sage-50 p-7">
-            <h2 className="text-2xl">Liever eerst kennismaken?</h2>
-            <p className="mt-3 leading-relaxed text-muted">
-              In een gratis gesprek van {settings.introCallMinutes} minuten
-              bespreken we je vraag en hoor je of coaching bij je past.
-            </p>
+            <h2 className="text-2xl">{page.asideTitle}</h2>
+            <p className="mt-3 leading-relaxed text-muted">{page.asideText}</p>
             <div className="mt-6">
-              <ButtonLink href={INTRO_HREF}>{INTRO_LABEL}</ButtonLink>
+              <ButtonLink href={INTRO_HREF}>{settings.ctaLabel}</ButtonLink>
             </div>
           </div>
         </div>

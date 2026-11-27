@@ -8,7 +8,15 @@ export const NAV_ITEMS = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function SiteHeader({ siteName }: { siteName: string }) {
+export function SiteHeader({
+  siteName,
+  ctaLabel,
+  ctaLabelShort,
+}: {
+  siteName: string;
+  ctaLabel: string;
+  ctaLabelShort: string;
+}) {
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-paper/95 backdrop-blur">
       <a
@@ -45,8 +53,8 @@ export function SiteHeader({ siteName }: { siteName: string }) {
           href={INTRO_HREF}
           className="inline-flex min-h-11 items-center rounded-full bg-sage-700 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-sage-800"
         >
-          <span className="sm:hidden">Kennismaking</span>
-          <span className="hidden sm:inline">Gratis kennismaking</span>
+          <span className="lg:hidden">{ctaLabelShort}</span>
+          <span className="hidden lg:inline">{ctaLabel}</span>
         </Link>
       </Container>
     </header>

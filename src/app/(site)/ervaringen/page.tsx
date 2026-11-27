@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
 import { ReviewCard } from "@/components/review-card";
 import { CtaBand, PageHeader, Section } from "@/components/ui";
-import { getHome, getReviews, getSettings } from "@/lib/content";
+import { getErvaringen, getReviews } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Ervaringen" };
+export function generateMetadata(): Metadata {
+  return { title: getErvaringen().title };
+}
 
 export default function ErvaringenPage() {
+  const page = getErvaringen();
   const reviews = getReviews();
-  const home = getHome();
-  const settings = getSettings();
 
   return (
     <>
-      <PageHeader
-        title="Ervaringen"
-        intro="Cliënten vertellen in hun eigen woorden wat coaching voor hen heeft betekend. Elke ervaring is geplaatst met toestemming."
-      />
+      <PageHeader title={page.title} intro={page.intro} />
 
       <Section tone="paper">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -25,11 +23,7 @@ export default function ErvaringenPage() {
         </div>
       </Section>
 
-      <CtaBand
-        title={home.ctaTitle}
-        text={home.ctaText}
-        reassurance={`Gratis en vrijblijvend · ${settings.introCallMinutes} minuten`}
-      />
+      <CtaBand />
     </>
   );
 }

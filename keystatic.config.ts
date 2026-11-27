@@ -23,12 +23,33 @@ const titledItems = (label: string) =>
     { label, itemLabel: (props) => props.fields.title.value || "Nieuw item" },
   );
 
+/**
+ * Where the editor saves.
+ * - Default: local files in /content (development on your own machine).
+ * - NEXT_PUBLIC_KEYSTATIC_STORAGE=github: the editor signs in with GitHub and
+ *   saves each change as a commit in the repository. Use this on the hosted
+ *   site so editors can work from anywhere. See README, "Editing on the live site".
+ */
+export const usesGithubStorage =
+  process.env.NEXT_PUBLIC_KEYSTATIC_STORAGE === "github";
+
+const repo = (process.env.NEXT_PUBLIC_KEYSTATIC_REPO ??
+  "peterhvw/woutercoaching") as `${string}/${string}`;
+
 export default config({
-  storage: { kind: "local" },
+  storage: usesGithubStorage ? { kind: "github", repo } : { kind: "local" },
   ui: {
     brand: { name: "Wouter Coaching" },
     navigation: {
-      "Pagina's": ["home", "overMij", "werkwijze", "kennismaking"],
+      "Pagina's": [
+        "home",
+        "overMij",
+        "werkwijze",
+        "ervaringen",
+        "kennismaking",
+        "contact",
+        "privacy",
+      ],
       Verzamelingen: ["reviews", "posts"],
       Instellingen: ["settings"],
     },
@@ -51,10 +72,10 @@ export default config({
           description: "Leeg laten zolang het adres niet bekend is.",
         }),
         email: fields.text({ label: "E-mailadres" }),
-        phone: fields.text({ label: "Telefoonnummer" }),
         whatsapp: fields.text({
           label: "WhatsApp-nummer",
-          description: "Internationaal formaat zonder plus, bijv. 31612345678.",
+          description:
+            "Internationaal formaat zonder plus, bijv. 31612345678. Wordt alleen als WhatsApp-knop getoond, niet als belnummer.",
         }),
         kvk: fields.text({ label: "KvK-nummer" }),
         btw: fields.text({ label: "Btw-identificatienummer" }),
@@ -70,6 +91,18 @@ export default config({
           label: "Reactietermijn",
           description: "Bijv. 'binnen 1 werkdag'.",
         }),
+        ctaLabel: fields.text({
+          label: "Tekst op de kennismakingsknop",
+          description: "De knop die op elke pagina terugkomt.",
+        }),
+        ctaLabelShort: fields.text({
+          label: "Korte knoptekst (menu)",
+        }),
+        reassurance: fields.text({
+          label: "Geruststelling onder de knop",
+          description: "Bijv. 'Gratis en vrijblijvend'.",
+        }),
+        whatsappLabel: fields.text({ label: "Tekst op de WhatsApp-knop" }),
       },
     }),
 
@@ -80,7 +113,8 @@ export default config({
       schema: {
         heroTitle: fields.text({ label: "Kop" }),
         heroIntro: fields.text({ label: "Inleiding", multiline: true }),
-        heroNote: fields.text({ label: "Regel onder de knop" }),
+        heroNote: fields.text({ label: "Regel boven de kop" }),
+        heroSecondaryButton: fields.text({ label: "Tweede knop (naar werkwijze)" }),
         recogniseTitle: fields.text({ label: "Herken je dit: kop" }),
         recogniseItems: fields.array(fields.text({ label: "Situatie" }), {
           label: "Herken je dit: situaties",
@@ -94,8 +128,17 @@ export default config({
         outcomes: titledItems("Wat het oplevert: punten"),
         approachTitle: fields.text({ label: "Aanpak: kop" }),
         approachText: paragraphs("Aanpak: tekst"),
+        stepsTitle: fields.text({ label: "Werkwijze in stappen: kop" }),
+        stepsPriceIntro: fields.text({
+          label: "Werkwijze in stappen: zin voor de prijs",
+          description: "Bijv. 'Een traject is er'. De vanaf-prijs volgt automatisch.",
+        }),
+        stepsLink: fields.text({ label: "Werkwijze in stappen: linktekst" }),
+        reviewsTitle: fields.text({ label: "Ervaringen: kop" }),
+        reviewsLink: fields.text({ label: "Ervaringen: linktekst" }),
         aboutTitle: fields.text({ label: "Over mij (kort): kop" }),
         aboutText: paragraphs("Over mij (kort): tekst"),
+        aboutLink: fields.text({ label: "Over mij (kort): linktekst" }),
         faqTitle: fields.text({ label: "Veelgestelde vragen: kop" }),
         faq: fields.array(
           fields.object({
@@ -137,13 +180,59 @@ export default config({
       schema: {
         title: fields.text({ label: "Kop" }),
         intro: fields.text({ label: "Inleiding", multiline: true }),
+        stepsTitle: fields.text({ label: "Stappen: kop" }),
         steps: titledItems("Stappen"),
         practicalTitle: fields.text({ label: "Praktisch: kop" }),
         practical: titledItems("Praktisch: punten"),
         priceTitle: fields.text({ label: "Tarieven: kop" }),
+        priceLead: fields.text({
+          label: "Tarieven: woord voor de prijs",
+          description: "Bijv. 'Traject'. De vanaf-prijs volgt automatisch.",
+        }),
         priceText: paragraphs("Tarieven: tekst"),
         boundaryTitle: fields.text({ label: "Coaching en therapie: kop" }),
         boundaryText: paragraphs("Coaching en therapie: tekst"),
+      },
+    }),
+
+    ervaringen: singleton({
+      label: "Ervaringen (pagina)",
+      path: "content/ervaringen",
+      format: { data: "yaml" },
+      schema: {
+        title: fields.text({ label: "Kop" }),
+        intro: fields.text({ label: "Inleiding", multiline: true }),
+      },
+    }),
+
+    contact: singleton({
+      label: "Contact",
+      path: "content/contact",
+      format: { data: "yaml" },
+      schema: {
+        title: fields.text({ label: "Kop" }),
+        intro: fields.text({ label: "Inleiding", multiline: true }),
+        emailLabel: fields.text({ label: "Label e-mail" }),
+        whatsappLabel: fields.text({ label: "Label WhatsApp" }),
+        locationLabel: fields.text({ label: "Label locatie" }),
+        asideTitle: fields.text({ label: "Blok kennismaking: kop" }),
+        asideText: fields.text({ label: "Blok kennismaking: tekst", multiline: true }),
+      },
+    }),
+
+    privacy: singleton({
+      label: "Privacyverklaring",
+      path: "content/privacy",
+      format: { data: "yaml" },
+      schema: {
+        title: fields.text({ label: "Kop" }),
+        intro: fields.text({ label: "Inleiding", multiline: true }),
+        draft: fields.checkbox({
+          label: "Toon de markering 'Concept'",
+          description: "Uitzetten zodra de verklaring is gecontroleerd.",
+          defaultValue: true,
+        }),
+        sections: titledItems("Onderdelen"),
       },
     }),
 
@@ -158,6 +247,21 @@ export default config({
         expectItems: fields.array(fields.text({ label: "Punt" }), {
           label: "Wat je kunt verwachten: punten",
           itemLabel: (props) => props.value || "Nieuw punt",
+        }),
+        nameLabel: fields.text({ label: "Formulier: label naam" }),
+        emailLabel: fields.text({ label: "Formulier: label e-mailadres" }),
+        phoneLabel: fields.text({ label: "Formulier: label mobiel nummer" }),
+        optionalLabel: fields.text({ label: "Formulier: aanduiding 'optioneel'" }),
+        messageLabel: fields.text({ label: "Formulier: label bericht" }),
+        submitLabel: fields.text({ label: "Formulier: tekst op de verzendknop" }),
+        privacyNote: fields.text({
+          label: "Formulier: zin over privacy",
+          description: "De link naar de privacyverklaring volgt automatisch.",
+          multiline: true,
+        }),
+        whatsappIntro: fields.text({
+          label: "Zin boven de WhatsApp-knop",
+          multiline: true,
         }),
         successTitle: fields.text({ label: "Bevestiging na verzenden: kop" }),
         successText: fields.text({
