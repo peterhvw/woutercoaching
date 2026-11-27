@@ -421,10 +421,24 @@ export default config({
       format: { data: "yaml" },
       schema: {
         title: fields.slug({ name: { label: "Titel" } }),
-        videoUrl: fields.url({
-          label: "Link naar de video",
+        videoFile: fields.file({
+          label: "Videobestand (uploaden)",
           description:
-            "Plak de link van YouTube (of een embed-link van een andere aanbieder). De video laadt pas nadat een bezoeker op afspelen klikt.",
+            "Voor korte video's: MP4, maximaal ongeveer 25 MB (ruwweg 1 tot 3 minuten). Het bestand wordt in de repository bewaard. Grotere bestanden mislukken bij het opslaan; gebruik daarvoor de link hieronder.",
+          directory: "public/video/media",
+          publicPath: "/video/media/",
+        }),
+        captions: fields.file({
+          label: "Ondertiteling bij het videobestand (.vtt)",
+          description:
+            "Optioneel maar aanbevolen: een ondertitelbestand in WebVTT-formaat, voor wie niet kan of wil luisteren.",
+          directory: "public/video/media",
+          publicPath: "/video/media/",
+        }),
+        videoUrl: fields.url({
+          label: "Link naar de video (voor lange opnames)",
+          description:
+            "Alleen invullen als er geen bestand is geüpload. Plak de link van YouTube of een embed-link van een andere aanbieder. De video laadt pas nadat een bezoeker op afspelen klikt.",
         }),
         poster: fields.image({
           label: "Voorbeeldafbeelding",

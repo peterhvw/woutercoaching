@@ -182,6 +182,10 @@ export type Case = {
 export type MediaItem = {
   slug: string;
   title: string;
+  /** Public URL of an uploaded video file, or null. Takes precedence over videoUrl. */
+  videoFile: string | null;
+  /** Public URL of an uploaded WebVTT captions file, or null. */
+  captions: string | null;
   videoUrl: string | null;
   /** Public URL of the poster image, or null. */
   poster: string | null;
@@ -262,6 +266,8 @@ export function getMedia(): MediaItem[] {
     .map((entry) => ({
       ...entry,
       keyPoints: entry.keyPoints ?? [],
+      videoFile: assetUrl(entry.videoFile, "/video/media/", entry.slug),
+      captions: assetUrl(entry.captions, "/video/media/", entry.slug),
       videoUrl: entry.videoUrl?.trim() || null,
       poster: assetUrl(entry.poster, "/images/media/", entry.slug),
     }))

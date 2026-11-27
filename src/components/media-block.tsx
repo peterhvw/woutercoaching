@@ -12,7 +12,28 @@ export function MediaBlock({ item, labels }: { item: MediaItem; labels: Praktijk
   return (
     <article className="grid gap-8 lg:grid-cols-[3fr_2fr]">
       <div>
-        {embedUrl ? (
+        {item.videoFile ? (
+          // Served from this site itself, so no click-to-load notice is needed.
+          <video
+            controls
+            preload="none"
+            playsInline
+            poster={item.poster ?? undefined}
+            className="aspect-video w-full rounded-2xl bg-ink"
+          >
+            <source src={item.videoFile} />
+            {item.captions && (
+              <track
+                kind="captions"
+                src={item.captions}
+                srcLang="nl"
+                label="Nederlands"
+                default
+              />
+            )}
+            <a href={item.videoFile}>{item.title}</a>
+          </video>
+        ) : embedUrl ? (
           <VideoPlayer
             title={item.title}
             embedUrl={embedUrl}
