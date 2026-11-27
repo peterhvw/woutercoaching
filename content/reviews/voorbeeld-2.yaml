@@ -1,0 +1,7 @@
+name: Voorbeeld 2
+context: Context, bijvoorbeeld leeftijd of beroep
+quote: >-
+  Hier komt de ervaring van een cliënt: de situatie vooraf, wat de coaching
+  heeft gedaan en wat er daarna is veranderd.
+order: 2
+consent: false
