@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MediaBlock } from "@/components/media-block";
 import {
   CtaBand,
   PageHeader,
@@ -7,7 +8,7 @@ import {
   Section,
   SectionTitle,
 } from "@/components/ui";
-import { getOverMij, toParagraphs } from "@/lib/content";
+import { getMedia, getOverMij, getPraktijk, toParagraphs } from "@/lib/content";
 
 export function generateMetadata(): Metadata {
   return { title: getOverMij().title };
@@ -15,6 +16,8 @@ export function generateMetadata(): Metadata {
 
 export default function OverMijPage() {
   const page = getOverMij();
+  const praktijk = getPraktijk();
+  const media = getMedia().filter((item) => item.showOnOverMij);
 
   return (
     <>
@@ -48,6 +51,17 @@ export default function OverMijPage() {
           ))}
         </ul>
       </Section>
+
+      {media.length > 0 && (
+        <Section tone="paper">
+          <SectionTitle>{praktijk.mediaTitle}</SectionTitle>
+          <div className="space-y-14">
+            {media.map((item) => (
+              <MediaBlock key={item.slug} item={item} labels={praktijk} />
+            ))}
+          </div>
+        </Section>
+      )}
 
       <CtaBand />
     </>

@@ -14,6 +14,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - All visitor-facing text is Dutch, informal "je", calm and expert in tone. Text belongs in `content/*.yaml`, not in components, unless it is a fixed interface label.
 - Never invent facts about Wouter (credentials, prices, reviews, contact details). Use a visible `[...]` placeholder instead.
 - A review may only render without the "Voorbeeld" label when `consent: true`. Do not change that rule.
+- A case is labelled by its `kind`: `voorbeeld` always shows "Voorbeeld"; `samengesteld` and `toestemming` show their fixed accountability line. Never write a case that describes a real client, and never remove these labels.
+- Third-party media must stay click-to-load (`src/components/video-player.tsx`). Do not add embeds, fonts, analytics or scripts that contact another provider on page load; that would require a cookie banner.
 - Use the tokens in `src/app/(site)/globals.css` and the components in `src/components`; do not add one-off colours or fonts.
 - Changing a field in `keystatic.config.ts` means updating its type in `src/lib/content.ts` and the YAML in `content/`.
 - Content is read with synchronous file reads on purpose, so pages stay fully static. Keep it that way.

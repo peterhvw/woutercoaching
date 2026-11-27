@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { whatsappHref, type Settings } from "@/lib/content";
-import { NAV_ITEMS } from "./site-header";
+import { getNavItems } from "./site-header";
 import { Container, INTRO_HREF } from "./ui";
 
 /** Shows a value, or a visible placeholder while the editor has not filled it in. */
@@ -23,7 +23,7 @@ export function SiteFooter({ settings }: { settings: Settings }) {
 
         <nav aria-label="Voettekstmenu">
           <ul className="space-y-2">
-            {[...NAV_ITEMS, { href: INTRO_HREF, label: settings.ctaLabelShort }].map(
+            {[...getNavItems(), { href: INTRO_HREF, label: settings.ctaLabelShort }].map(
               (item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="hover:underline">

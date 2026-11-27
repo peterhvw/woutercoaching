@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { CaseCard } from "@/components/case-card";
 import { Steps } from "@/components/steps";
 import { CtaBand, PageHeader, Prose, Section, SectionTitle } from "@/components/ui";
 import {
+  getCases,
+  getPraktijk,
   getSettings,
   getWerkwijze,
   priceLabel,
@@ -15,6 +18,10 @@ export function generateMetadata(): Metadata {
 export default function WerkwijzePage() {
   const page = getWerkwijze();
   const settings = getSettings();
+  const praktijk = getPraktijk();
+  const cases = getCases()
+    .filter((item) => item.showOnWerkwijze)
+    .slice(0, 2);
 
   return (
     <>
@@ -24,6 +31,17 @@ export default function WerkwijzePage() {
         <SectionTitle>{page.stepsTitle}</SectionTitle>
         <Steps steps={page.steps} />
       </Section>
+
+      {cases.length > 0 && (
+        <Section tone="surface">
+          <SectionTitle>{praktijk.werkwijzeTitle}</SectionTitle>
+          <div className="grid gap-6 md:grid-cols-2">
+            {cases.map((item) => (
+              <CaseCard key={item.slug} item={item} readMore={praktijk.readMore} />
+            ))}
+          </div>
+        </Section>
+      )}
 
       <Section tone="sage">
         <SectionTitle>{page.practicalTitle}</SectionTitle>

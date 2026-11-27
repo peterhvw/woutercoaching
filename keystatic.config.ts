@@ -46,11 +46,12 @@ export default config({
         "overMij",
         "werkwijze",
         "ervaringen",
+        "praktijk",
         "kennismaking",
         "contact",
         "privacy",
       ],
-      Verzamelingen: ["reviews", "posts"],
+      Verzamelingen: ["cases", "media", "reviews", "posts"],
       Instellingen: ["settings"],
     },
   },
@@ -236,6 +237,47 @@ export default config({
       },
     }),
 
+    praktijk: singleton({
+      label: "Uit de praktijk (pagina)",
+      path: "content/praktijk",
+      format: { data: "yaml" },
+      schema: {
+        menuLabel: fields.text({ label: "Naam in het menu" }),
+        title: fields.text({ label: "Kop" }),
+        intro: fields.text({ label: "Inleiding", multiline: true }),
+        readMore: fields.text({ label: "Linktekst op een kaartje" }),
+        situationTitle: fields.text({ label: "Casus: kop 'situatie'" }),
+        signalsTitle: fields.text({ label: "Casus: kop 'signalen'" }),
+        readingTitle: fields.text({ label: "Casus: kop 'hoe ik dit las'" }),
+        actionsTitle: fields.text({ label: "Casus: kop 'wat we deden'" }),
+        outcomeTitle: fields.text({ label: "Casus: kop 'wat er veranderde'" }),
+        audioLabel: fields.text({ label: "Casus: kop boven de audio" }),
+        transcriptLabel: fields.text({ label: "Casus: tekst op de uitklapper van de uitgeschreven audio" }),
+        recogniseTitle: fields.text({ label: "Casus: kop van de afsluiting" }),
+        recogniseText: fields.text({ label: "Casus: tekst van de afsluiting", multiline: true }),
+        disclaimerComposite: fields.text({
+          label: "Verantwoording: samengestelde casus",
+          multiline: true,
+        }),
+        disclaimerConsent: fields.text({
+          label: "Verantwoording: casus met toestemming",
+          multiline: true,
+        }),
+        homeTitle: fields.text({ label: "Home: kop boven de uitgelichte casus" }),
+        werkwijzeTitle: fields.text({ label: "Werkwijze: kop boven de casussen" }),
+        mediaTitle: fields.text({ label: "Video's: kop" }),
+        mediaIntro: fields.text({ label: "Video's: inleiding", multiline: true }),
+        videoNotice: fields.text({
+          label: "Video's: melding bij de afspeelknop",
+          description:
+            "Verplichte uitleg dat de video pas na een klik bij de aanbieder wordt geladen.",
+          multiline: true,
+        }),
+        videoButton: fields.text({ label: "Video's: tekst op de afspeelknop" }),
+        keyPointsTitle: fields.text({ label: "Video's: kop boven de kernpunten" }),
+      },
+    }),
+
     kennismaking: singleton({
       label: "Kennismaking",
       path: "content/kennismaking",
@@ -273,6 +315,116 @@ export default config({
   },
 
   collections: {
+    cases: collection({
+      label: "Casussen",
+      path: "content/cases/*",
+      slugField: "title",
+      format: { data: "yaml" },
+      schema: {
+        title: fields.slug({
+          name: {
+            label: "Titel",
+            description:
+              "Beschrijf het patroon, niet de persoon. Bijv. 'Hoofdpijn die elke zondagavond terugkwam'.",
+          },
+        }),
+        kind: fields.select({
+          label: "Soort casus",
+          description:
+            "Bepaalt welke verantwoording onder de casus staat. 'Voorbeeld' is alleen bedoeld om de opmaak te beoordelen.",
+          options: [
+            { label: "Voorbeeld (nog geen echte casus)", value: "voorbeeld" },
+            { label: "Samengesteld uit meerdere trajecten", value: "samengesteld" },
+            {
+              label: "Echte casus, met schriftelijke toestemming",
+              value: "toestemming",
+            },
+          ],
+          defaultValue: "voorbeeld",
+        }),
+        theme: fields.text({
+          label: "Thema",
+          description: "Kort label, bijv. 'Stress en herstel'.",
+        }),
+        summary: fields.text({
+          label: "In het kort",
+          description: "40 tot 60 woorden. Staat op de kaartjes.",
+          multiline: true,
+        }),
+        situation: paragraphs(
+          "De situatie",
+          "Alleen rol en levensfase, geen herkenbare details. Lege regel tussen alinea's.",
+        ),
+        signals: paragraphs("Wat het lichaam en het gedrag lieten zien"),
+        reading: paragraphs(
+          "Hoe ik dit las",
+          "De kern: hoe hangen lichaam, emotie, denken en gedrag samen?",
+        ),
+        audio: fields.file({
+          label: "Gesproken toelichting (audiobestand)",
+          description:
+            "Opname van 1 tot 2 minuten, bijv. een spraakmemo. Spreek over het patroon, niet over de persoon.",
+          directory: "public/audio/cases",
+          publicPath: "/audio/cases/",
+        }),
+        audioTitle: fields.text({
+          label: "Titel van de toelichting",
+          description: "Bijv. 'Waarom ik eerst naar de zondagavond keek (1:30)'.",
+        }),
+        audioTranscript: paragraphs(
+          "Uitgeschreven toelichting",
+          "Verplicht bij audio: de gesproken tekst, voor wie niet kan of wil luisteren.",
+        ),
+        actions: paragraphs("Wat we deden"),
+        outcome: paragraphs("Wat er veranderde"),
+        featured: fields.checkbox({
+          label: "Uitlichten op de homepage",
+          defaultValue: false,
+        }),
+        showOnWerkwijze: fields.checkbox({
+          label: "Tonen op de pagina Werkwijze",
+          defaultValue: false,
+        }),
+        order: fields.integer({ label: "Volgorde", defaultValue: 10 }),
+      },
+    }),
+
+    media: collection({
+      label: "Video's en lezingen",
+      path: "content/media/*",
+      slugField: "title",
+      format: { data: "yaml" },
+      schema: {
+        title: fields.slug({ name: { label: "Titel" } }),
+        videoUrl: fields.url({
+          label: "Link naar de video",
+          description:
+            "Plak de link van YouTube (of een embed-link van een andere aanbieder). De video laadt pas nadat een bezoeker op afspelen klikt.",
+        }),
+        poster: fields.image({
+          label: "Voorbeeldafbeelding",
+          description: "Wordt getoond voordat de video is geladen.",
+          directory: "public/images/media",
+          publicPath: "/images/media/",
+        }),
+        duration: fields.text({ label: "Duur", description: "Bijv. '42 min'." }),
+        context: fields.text({
+          label: "Waar en wanneer",
+          description: "Bijv. 'Lezing bij [academy], maart 2027'.",
+        }),
+        summary: paragraphs("Samenvatting"),
+        keyPoints: fields.array(fields.text({ label: "Kernpunt" }), {
+          label: "Kernpunten",
+          itemLabel: (props) => props.value || "Nieuw kernpunt",
+        }),
+        showOnOverMij: fields.checkbox({
+          label: "Ook tonen op de pagina Over mij",
+          defaultValue: false,
+        }),
+        order: fields.integer({ label: "Volgorde", defaultValue: 10 }),
+      },
+    }),
+
     reviews: collection({
       label: "Ervaringen",
       path: "content/reviews/*",

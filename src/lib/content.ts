@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { load } from "js-yaml";
 
@@ -118,6 +118,72 @@ export type Privacy = {
   sections: TitledItem[];
 };
 
+export type Praktijk = {
+  menuLabel: string;
+  title: string;
+  intro: string;
+  readMore: string;
+  situationTitle: string;
+  signalsTitle: string;
+  readingTitle: string;
+  actionsTitle: string;
+  outcomeTitle: string;
+  audioLabel: string;
+  transcriptLabel: string;
+  recogniseTitle: string;
+  recogniseText: string;
+  disclaimerComposite: string;
+  disclaimerConsent: string;
+  homeTitle: string;
+  werkwijzeTitle: string;
+  mediaTitle: string;
+  mediaIntro: string;
+  videoNotice: string;
+  videoButton: string;
+  keyPointsTitle: string;
+};
+
+/**
+ * voorbeeld: layout sample, always labelled "Voorbeeld".
+ * samengesteld: composite of several trajectories.
+ * toestemming: a real case, published with the client's written consent.
+ */
+export type CaseKind = "voorbeeld" | "samengesteld" | "toestemming";
+
+export type Case = {
+  slug: string;
+  title: string;
+  kind: CaseKind;
+  theme: string;
+  summary: string;
+  situation: string;
+  signals: string;
+  reading: string;
+  /** Public URL of the audio file, or null. */
+  audio: string | null;
+  audioTitle: string;
+  audioTranscript: string;
+  actions: string;
+  outcome: string;
+  featured: boolean;
+  showOnWerkwijze: boolean;
+  order: number;
+};
+
+export type MediaItem = {
+  slug: string;
+  title: string;
+  videoUrl: string | null;
+  /** Public URL of the poster image, or null. */
+  poster: string | null;
+  duration: string;
+  context: string;
+  summary: string;
+  keyPoints: string[];
+  showOnOverMij: boolean;
+  order: number;
+};
+
 export type Review = {
   slug: string;
   name: string;
@@ -140,6 +206,57 @@ export const getKennismaking = () => readYaml<Kennismaking>("kennismaking.yaml")
 export const getErvaringen = () => readYaml<Ervaringen>("ervaringen.yaml");
 export const getContact = () => readYaml<Contact>("contact.yaml");
 export const getPrivacy = () => readYaml<Privacy>("privacy.yaml");
+
+export const getPraktijk = () => readYaml<Praktijk>("praktijk.yaml");
+
+/** Reads every entry of a collection folder; the file name is the slug. */
+function readCollection<T>(folder: string): (T & { slug: string })[] {
+  const dir = path.join(CONTENT_DIR, folder);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((file) => file.endsWith(".yaml"))
+    .map((file) => ({
+      ...readYaml<T>(path.join(folder, file)),
+      slug: file.replace(/\.yaml$/, ""),
+    }));
+}
+
+/**
+ * The editor stores an uploaded file either as a full public path or as a bare
+ * file name inside a folder named after the entry. Both become a public URL.
+ */
+function assetUrl(value: unknown, publicPath: string, slug: string): string | null {
+  if (typeof value !== "string" || !value.trim()) return null;
+  return value.startsWith("/") ? value : `${publicPath}${slug}/${value}`;
+}
+
+const byOrder = (a: { order?: number }, b: { order?: number }) =>
+  (a.order ?? 0) - (b.order ?? 0);
+
+export function getCases(): Case[] {
+  return readCollection<Omit<Case, "slug">>("cases")
+    .map((entry) => ({
+      ...entry,
+      kind: entry.kind ?? "voorbeeld",
+      audio: assetUrl(entry.audio, "/audio/cases/", entry.slug),
+    }))
+    .sort(byOrder);
+}
+
+export function getCase(slug: string): Case | undefined {
+  return getCases().find((entry) => entry.slug === slug);
+}
+
+export function getMedia(): MediaItem[] {
+  return readCollection<Omit<MediaItem, "slug">>("media")
+    .map((entry) => ({
+      ...entry,
+      keyPoints: entry.keyPoints ?? [],
+      videoUrl: entry.videoUrl?.trim() || null,
+      poster: assetUrl(entry.poster, "/images/media/", entry.slug),
+    }))
+    .sort(byOrder);
+}
 
 export function getReviews(): Review[] {
   const dir = path.join(CONTENT_DIR, "reviews");

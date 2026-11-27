@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CaseCard, CASES_HREF } from "@/components/case-card";
 import { ReviewCard } from "@/components/review-card";
 import { Steps } from "@/components/steps";
 import {
@@ -12,7 +13,9 @@ import {
   SectionTitle,
 } from "@/components/ui";
 import {
+  getCases,
   getHome,
+  getPraktijk,
   getReviews,
   getSettings,
   getWerkwijze,
@@ -29,6 +32,10 @@ export default function HomePage() {
   const settings = getSettings();
   const werkwijze = getWerkwijze();
   const reviews = getReviews().slice(0, 3);
+  const praktijk = getPraktijk();
+  const featuredCases = getCases()
+    .filter((item) => item.featured)
+    .slice(0, 2);
   const reassurance = reassuranceLine(settings);
 
   return (
@@ -108,6 +115,23 @@ export default function HomePage() {
           </Link>
         </p>
       </Section>
+
+      {/* Uit de praktijk: uitgelichte casus */}
+      {featuredCases.length > 0 && (
+        <Section tone="surface">
+          <SectionTitle>{praktijk.homeTitle}</SectionTitle>
+          <div className="grid gap-6 md:grid-cols-2">
+            {featuredCases.map((item) => (
+              <CaseCard key={item.slug} item={item} readMore={praktijk.readMore} />
+            ))}
+          </div>
+          <p className="mt-8">
+            <Link href={CASES_HREF} className={textLink}>
+              {praktijk.title}
+            </Link>
+          </p>
+        </Section>
+      )}
 
       {/* 5. Ervaringen */}
       <Section tone="sand">

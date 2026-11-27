@@ -1,12 +1,17 @@
 import Link from "next/link";
+import { getPraktijk } from "@/lib/content";
 import { Container, INTRO_HREF } from "./ui";
 
-export const NAV_ITEMS = [
-  { href: "/over-mij", label: "Over mij" },
-  { href: "/werkwijze", label: "Werkwijze" },
-  { href: "/ervaringen", label: "Ervaringen" },
-  { href: "/contact", label: "Contact" },
-];
+/** Main menu. The label of the cases section is set in the editor. */
+export function getNavItems() {
+  return [
+    { href: "/over-mij", label: "Over mij" },
+    { href: "/werkwijze", label: "Werkwijze" },
+    { href: "/uit-de-praktijk", label: getPraktijk().menuLabel },
+    { href: "/ervaringen", label: "Ervaringen" },
+    { href: "/contact", label: "Contact" },
+  ];
+}
 
 export function SiteHeader({
   siteName,
@@ -36,8 +41,8 @@ export function SiteHeader({
           aria-label="Hoofdmenu"
           className="order-3 w-full sm:order-none sm:w-auto"
         >
-          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-[0.95rem] font-medium text-ink sm:gap-x-7">
-            {NAV_ITEMS.map((item) => (
+          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-[0.95rem] font-medium text-ink lg:gap-x-7">
+            {getNavItems().map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
