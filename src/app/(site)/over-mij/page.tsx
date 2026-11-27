@@ -3,7 +3,7 @@ import { MediaBlock } from "@/components/media-block";
 import {
   CtaBand,
   PageHeader,
-  PortraitPlaceholder,
+  Portrait,
   Prose,
   Section,
   SectionTitle,
@@ -27,7 +27,12 @@ export default function OverMijPage() {
         <div className="grid gap-10 md:grid-cols-[2fr_1fr]">
           <Prose paragraphs={toParagraphs(page.story)} />
           <div className="mx-auto w-full max-w-xs md:max-w-none">
-            <PortraitPlaceholder />
+            <Portrait
+              src={page.portrait}
+              alt={page.portraitAlt}
+              sizes="(min-width: 768px) 20rem, 20rem"
+              preload
+            />
           </div>
         </div>
       </Section>

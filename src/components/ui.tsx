@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { getHome, getSettings, reassuranceLine } from "@/lib/content";
@@ -116,6 +117,37 @@ export function PortraitPlaceholder({ label = "Portretfoto volgt" }: { label?: s
       className="flex aspect-[4/5] w-full items-end justify-center rounded-[2rem] border border-dashed border-sage-600 bg-sage-100 p-6"
     >
       <PlaceholderTag>{label}</PlaceholderTag>
+    </div>
+  );
+}
+
+/**
+ * A portrait in the site's rounded frame. Shows the uploaded photo, or the
+ * placeholder while the editor has not uploaded one yet.
+ */
+export function Portrait({
+  src,
+  alt,
+  sizes,
+  preload = false,
+}: {
+  src?: string | null;
+  alt?: string;
+  /** How wide the photo is shown, so the browser picks a fitting file size. */
+  sizes: string;
+  preload?: boolean;
+}) {
+  if (!src?.trim()) return <PortraitPlaceholder />;
+  return (
+    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-sage-100">
+      <Image
+        src={src}
+        alt={alt?.trim() ?? ""}
+        fill
+        sizes={sizes}
+        preload={preload}
+        className="object-cover"
+      />
     </div>
   );
 }

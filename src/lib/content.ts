@@ -37,6 +37,9 @@ export type Home = {
   heroIntro: string;
   heroNote: string;
   heroSecondaryButton: string;
+  /** Public URL of an uploaded photo; absent while none is uploaded. */
+  heroImage?: string;
+  heroImageAlt?: string;
   recogniseTitle: string;
   recogniseItems: string[];
   recogniseClosing: string;
@@ -52,6 +55,8 @@ export type Home = {
   aboutTitle: string;
   aboutText: string;
   aboutLink: string;
+  aboutImage?: string;
+  aboutImageAlt?: string;
   faqTitle: string;
   faq: { question: string; answer: string }[];
   ctaTitle: string;
@@ -61,6 +66,8 @@ export type Home = {
 export type OverMij = {
   title: string;
   intro: string;
+  portrait?: string;
+  portraitAlt?: string;
   story: string;
   credentialsTitle: string;
   credentials: string[];

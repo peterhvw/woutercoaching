@@ -7,7 +7,7 @@ import {
   Container,
   CtaBand,
   INTRO_HREF,
-  PortraitPlaceholder,
+  Portrait,
   Prose,
   Section,
   SectionTitle,
@@ -60,7 +60,12 @@ export default function HomePage() {
             <p className="mt-4 text-sm text-muted">{reassurance}</p>
           </div>
           <div className="mx-auto w-full max-w-xs md:max-w-none">
-            <PortraitPlaceholder />
+            <Portrait
+              src={home.heroImage}
+              alt={home.heroImageAlt}
+              sizes="(min-width: 768px) 24rem, 20rem"
+              preload
+            />
           </div>
         </Container>
       </section>
@@ -152,7 +157,11 @@ export default function HomePage() {
       <Section tone="surface">
         <div className="grid items-center gap-10 md:grid-cols-[1fr_2fr]">
           <div className="mx-auto w-full max-w-[14rem] md:max-w-none">
-            <PortraitPlaceholder />
+            <Portrait
+              src={home.aboutImage}
+              alt={home.aboutImageAlt}
+              sizes="(min-width: 768px) 20rem, 14rem"
+            />
           </div>
           <div>
             <SectionTitle>{home.aboutTitle}</SectionTitle>

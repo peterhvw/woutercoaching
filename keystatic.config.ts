@@ -14,6 +14,23 @@ const paragraphs = (label: string, description?: string) =>
     multiline: true,
   });
 
+/** A photo plus its description for screen readers. Stored in public/images/site. */
+const photo = (label: string) =>
+  fields.image({
+    label,
+    description:
+      "Staande foto (ongeveer 4:5), liefst kleiner dan 2 MB. Zonder foto blijft er een tijdelijk vlak staan.",
+    directory: "public/images/site",
+    publicPath: "/images/site/",
+  });
+
+const photoAlt = (label: string) =>
+  fields.text({
+    label,
+    description:
+      "Korte omschrijving van wat er op de foto te zien is, voor wie de foto niet kan zien.",
+  });
+
 const titledItems = (label: string) =>
   fields.array(
     fields.object({
@@ -116,6 +133,8 @@ export default config({
         heroIntro: fields.text({ label: "Inleiding", multiline: true }),
         heroNote: fields.text({ label: "Regel boven de kop" }),
         heroSecondaryButton: fields.text({ label: "Tweede knop (naar werkwijze)" }),
+        heroImage: photo("Foto bovenaan"),
+        heroImageAlt: photoAlt("Foto bovenaan: omschrijving"),
         recogniseTitle: fields.text({ label: "Herken je dit: kop" }),
         recogniseItems: fields.array(fields.text({ label: "Situatie" }), {
           label: "Herken je dit: situaties",
@@ -140,6 +159,8 @@ export default config({
         aboutTitle: fields.text({ label: "Over mij (kort): kop" }),
         aboutText: paragraphs("Over mij (kort): tekst"),
         aboutLink: fields.text({ label: "Over mij (kort): linktekst" }),
+        aboutImage: photo("Over mij (kort): foto"),
+        aboutImageAlt: photoAlt("Over mij (kort): omschrijving foto"),
         faqTitle: fields.text({ label: "Veelgestelde vragen: kop" }),
         faq: fields.array(
           fields.object({
@@ -163,6 +184,8 @@ export default config({
       schema: {
         title: fields.text({ label: "Kop" }),
         intro: fields.text({ label: "Inleiding", multiline: true }),
+        portrait: photo("Portretfoto"),
+        portraitAlt: photoAlt("Portretfoto: omschrijving"),
         story: paragraphs("Mijn verhaal"),
         credentialsTitle: fields.text({ label: "Achtergrond: kop" }),
         credentials: fields.array(fields.text({ label: "Regel" }), {
